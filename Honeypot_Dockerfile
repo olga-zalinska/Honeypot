@@ -1,0 +1,26 @@
+FROM ubuntu:18.04
+
+ARG user="user"
+ARG user_uid=1000
+ARG honeypot_dir=/home/$user/x/
+ARG git_repository="https://github.com/olga-zalinska/Honeypot.git"
+
+EXPOSE 2022/tcp
+EXPOSE 22/tcp
+EXPOSE 9999/tcp
+
+RUN apt-get update
+RUN apt-get install -y build-essential apt-utils unzip curl git sudo wget inetutils-ping ssh nmap openssl
+RUN apt-get install -y net-tools p0f sshpass
+RUN apt-get install -y telnet cron python3 python3-pip mysql-server mysql-client apache2
+RUN apt-get install -y vim
+
+RUN useradd -p $(openssl passwd -1 $user) $user --uid $user_uid --create-home
+RUN usermod -s /bin/bash -aG sudo $user
+
+RUN python3 -m pip install --upgrade pip
+
+RUN git clone $git_repository $honeypot_dir
+RUN $honeypot_dir/bash_scripts/configure_setup.sh $honeypot_dir
+
+CMD echo "Honeypot created"

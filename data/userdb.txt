@@ -1,0 +1,5 @@
+root:0:123456
+user:0:p4ssw0rd
+mysql:0:mysql
+apache:0:apache123
+EOF
