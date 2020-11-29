@@ -93,7 +93,7 @@ sub print_commands_imitating_time {
 }
 
 sub print_commands {
-    my %events = %{$_[0]};
+    my %events = @_;
 
     for (sort keys %events) {
         my $key = $_;
@@ -106,8 +106,8 @@ my $executed_commands = 0;
 my $play_logged_actions = 0;
 
 GetOptions(
-    'executed_commands=s'       => \$executed_commands,
-    'play_logged_actions=i'     => \$play_logged_actions,
+    'executed_commands'       => \$executed_commands,
+    'play_logged_actions'     => \$play_logged_actions,
 ) or die "Incorrect usage!\n";
 
 my %events = read_events_from_commands_log($COMMANDS_LOG);
@@ -115,8 +115,10 @@ my %events = read_events_from_commands_log($COMMANDS_LOG);
 if($executed_commands == 1){
     print_commands(%events);
 }
-elsif($play_logged_actions  == 1){
+elsif($play_logged_actions == 1){
     my @execution_dates = (sort keys %events);
     my %outputs = read_events_outputs($COMMANDS_WITH_OUTPUTS_LOG, \@execution_dates);
     print_commands_imitating_time(\%events, \%outputs);
 }
+
+exit(0)

@@ -16,5 +16,5 @@ sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_
 service ssh start
 service mysql start &
 apachectl -D FOREGROUND &
-
+chmod 777 $shared_volume
 sudo --user=root p0f -i eth0 >> $shared_volume/p0f_scan.log &

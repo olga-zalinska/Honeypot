@@ -46,11 +46,11 @@ parse_args(){
 while getopts ":hepclrs" arg; do
   case ${arg} in
     e) # EXECUTED COMMANDS
-      docker exec -it gateway perl /root/Honeypot/main.pl --executed_commands
+      docker exec -it gateway /root/Honeypot/main.pl --executed_commands
       exit 0
       ;;
     p) # PLAY LOGGED ACTIONS
-      docker exec -it gateway perl /root/Honeypot/main.pl --play_logged_actions
+      docker exec -it gateway /root/Honeypot/main.pl --play_logged_actions
       exit 0
       ;;
     c) # CREATE CONTAINERS
@@ -109,5 +109,3 @@ parse_args $*
 check_required_packages
 
 exit 0
-
-
