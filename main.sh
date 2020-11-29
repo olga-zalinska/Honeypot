@@ -59,6 +59,7 @@ while getopts ":hepclrs" arg; do
       ;;
     l) # LOGIN TO HONEYPOT
       docker exec -it honeypot service ssh restart
+      docker exec -it honeypot chmod 777 /volume
       docker exec -it gateway ssh user@172.18.0.2
       exit 0
       ;;
