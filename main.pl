@@ -2,15 +2,20 @@
 
 use strict;
 use warnings;
-use File::Basename;
-use lib dirname (__FILE__);
 
 use Time::Local;
 use Time::HiRes qw(usleep);
 use Getopt::Long;
 
-my $COMMANDS_LOG = '/volume/commands.log';
-my $COMMANDS_WITH_OUTPUTS_LOG = '/volume/commands_with_outputs.log';
+use Cwd 'abs_path';
+
+my $dirname = abs_path($0);
+$dirname =~ s/main.pl//;
+
+my $FULL_MODE_LOGS_LOCATION = '/volume/';
+my $DEFAULT_DIRECORY_WITH_LOGS = 'logs/';
+my $COMMANDS_LOG = 'commands.log';
+my $COMMANDS_WITH_OUTPUTS_LOG = 'commands_with_outputs.log';
 my $OUTPUT_START = 'output_start';
 my $OUTPUT_END = 'output_end';
 my $USER = "user>"; #todo root>
@@ -104,20 +109,42 @@ sub print_commands {
 
 my $executed_commands = 0;
 my $play_logged_actions = 0;
+my $full_mode = 0;
+my $dir_with_logs = '';
+my $help = 0;
 
 GetOptions(
+    'help'       => \$help,
     'executed_commands'       => \$executed_commands,
     'play_logged_actions'     => \$play_logged_actions,
+    'full_mode'     => \$full_mode,
 ) or die "Incorrect usage!\n";
 
-my %events = read_events_from_commands_log($COMMANDS_LOG);
+
+if($help == 1){
+    print("Wyświetl komendy wywołane przez włamywacza: --executed_commands
+    Wyswietl komendy z outputem które były wywoływane przez wlamywacza: --play_logged_actions
+    By korzystać z trybu z dockerem, użyj też --full_mode
+    By zobaczyć szczegółowy opis projektu, wywołaj --help z pliku main.sh
+    --help, --executed_commands, --play_logged_actions, --full_mode \n");
+    exit(1)
+}
+
+if($full_mode == 0){
+    $dir_with_logs = $dirname . $DEFAULT_DIRECORY_WITH_LOGS;
+}
+else{
+    $dir_with_logs = $FULL_MODE_LOGS_LOCATION;
+}
+
+my %events = read_events_from_commands_log($dir_with_logs . $COMMANDS_LOG);
 
 if($executed_commands == 1){
     print_commands(%events);
 }
 elsif($play_logged_actions == 1){
     my @execution_dates = (sort keys %events);
-    my %outputs = read_events_outputs($COMMANDS_WITH_OUTPUTS_LOG, \@execution_dates);
+    my %outputs = read_events_outputs($dir_with_logs . $COMMANDS_WITH_OUTPUTS_LOG, \@execution_dates);
     print_commands_imitating_time(\%events, \%outputs);
 }
 

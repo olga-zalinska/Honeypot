@@ -10,7 +10,7 @@ if [[ $EUID -ne $user_id ]]; then
    exit 1
 fi
 
-echo "ForceCommand cd $honeypot_dir; ./main.py" >> /etc/ssh/sshd_config
+echo "ForceCommand cd $honeypot_dir; ./main.py --full_mode" >> /etc/ssh/sshd_config
 sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 service ssh start
