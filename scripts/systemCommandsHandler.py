@@ -1,4 +1,3 @@
-from stat import S_ENFMT
 from subprocess import check_output, CalledProcessError, call, DEVNULL
 from scripts.exceptions import CommandFailedError
 import os
@@ -76,8 +75,6 @@ class UnameCommand(Command):
 class CustomCommand(Command):
     pass
 
-
-# todo CurlCommand, CatCommand
 
 class SystemCommandsHandler:
     cwd = "/"
