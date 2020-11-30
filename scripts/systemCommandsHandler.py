@@ -1,10 +1,9 @@
 from stat import S_ENFMT
-from subprocess import check_output, CalledProcessError, call
+from subprocess import check_output, CalledProcessError, call, DEVNULL
 from scripts.exceptions import CommandFailedError
 import os
+from pathlib import Path
 
-BACKUPED_COMMANDS_DIR = 'backed_up_commands'
-WGET_STORAGE_LOCATION = 'wget_downloads'
 blacklist_commands = ['shutdown', 'init', 'kill', 'rm -rf', ':(){:|:&};:']
 
 
@@ -18,8 +17,13 @@ class Command:
 
 
 class FakedCommand(Command):
+
+    def __init__(self, command, backuped_commands_dir):
+        super().__init__(command)
+        self.backuped_commands_dir = backuped_commands_dir
+
     def execute(self):
-        with open(os.path.join(BACKUPED_COMMANDS_DIR, self.command), 'r') as f:
+        with open(os.path.join(self.backuped_commands_dir, self.command), 'r') as f:
             return f.read()
 
 
@@ -43,24 +47,24 @@ class BlacklistCommand(Command):
 class WgetCommand(Command):
     faked_chmod_files = []
 
-    def __init__(self, command):
-        self.command = command + ' -P ' + WGET_STORAGE_LOCATION
-
-    def fake_file(self):
-        downloaded_file = os.listdir(WGET_STORAGE_LOCATION)[0]
-        print(downloaded_file)
-        file_location = os.path.join(WGET_STORAGE_LOCATION, downloaded_file)
-        if os.path.isfile(file_location):
-            os.symlink(file_location, os.path.join(SystemCommandsHandler.cwd, downloaded_file))
-        else:
-            os.symlink(file_location, os.path.join(SystemCommandsHandler.cwd, downloaded_file),
-                       target_is_directory=True)
-        os.chmod(file_location, S_ENFMT)
+    def __init__(self, command, wget_storage_location):
+        Path(wget_storage_location).mkdir(exist_ok=True)
+        self.wget_storage_location = wget_storage_location
+        self.command = command + ' -P ' + wget_storage_location
 
     def execute(self):
-        output = super().execute()
-        self.fake_file()
-        return output
+        try:
+            call(self.command, shell=True, stdout=DEVNULL, stderr=DEVNULL)
+        except Exception:
+            pass
+        download_address = self.command.replace('wget ', '')
+        faked_output = f'''
+--2020-11-30 20:54:01--  ${download_address}
+Resolving {download_address}... failed: 443... connected.
+HTTP request sent, awaiting response... 404 Not Found
+2020-11-30 20:58:38 ERROR 404: Not Found.
+        '''# todo date
+        return faked_output
 
 
 class UnameCommand(Command):
@@ -83,19 +87,23 @@ class SystemCommandsHandler:
         'cd': CdCommand
     }
 
+
     def __deduce_command_type(self, provided_command):
-        for command in [file for file in os.listdir(BACKUPED_COMMANDS_DIR) if not os.path.isfile(file)]:
+        for command in [file for file in os.listdir(self.backuped_commands_dir) if not os.path.isfile(file)]:
             if command in provided_command:
-                return FakedCommand(command)
+                return FakedCommand(command, self.backuped_commands_dir)
 
         if 'uname' in provided_command: return UnameCommand(provided_command)
-        if 'wget' in provided_command: return WgetCommand(provided_command)
+        if 'wget' in provided_command: return WgetCommand(provided_command, self.wget_storage_location)
         if 'cd' in provided_command: return CdCommand(provided_command)
         return CustomCommand(provided_command)
 
-    def __init__(self, action_recorder, terminal_display):
+    def __init__(self, action_recorder, terminal_display, dirname):
+        self.dirname = dirname
         self.actionRecorder = action_recorder
         self.terminalDisplay = terminal_display
+        self.backuped_commands_dir = os.path.join(self.dirname, 'backed_up_commands')
+        self.wget_storage_location = os.path.join(self.dirname, 'wget_downloads')
 
     def handle_command(self, command):
         try:

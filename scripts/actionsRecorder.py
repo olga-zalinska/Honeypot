@@ -1,7 +1,8 @@
 import logging
 import os
 
-LOGS_LOCATION = "logs"
+FULL_MODE_LOGS_LOCATION = '/volume'
+DEFAULT_LOGS_LOCATION = 'logs'
 
 
 class CommandsFormatter(logging.Formatter):
@@ -12,8 +13,14 @@ class CommandsFormatter(logging.Formatter):
 
 class ActionsRecorder:
 
-    def __init__(self, logs_directory):
-        self.logs_directory = logs_directory
+    def __init__(self, is_full_mode, dirname):
+        self.is_full_mode = is_full_mode
+        self.dirname = dirname
+        self.logs_directory = FULL_MODE_LOGS_LOCATION if self.is_full_mode else os.path.join(dirname, DEFAULT_LOGS_LOCATION)
+        # if self.is_full_mode:
+        #     self.logs_directory = FULL_MODE_LOGS_LOCATION
+        # else:
+        #     self.logs_directory = DEFAULT_LOGS_LOCATION
         self.__setLogger()
 
     def __setLogger(self):
