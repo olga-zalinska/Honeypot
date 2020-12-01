@@ -10,10 +10,8 @@ EXPOSE 22/tcp
 EXPOSE 9999/tcp
 
 RUN apt-get update
-RUN apt-get install -y build-essential apt-utils unzip curl git sudo wget inetutils-ping ssh nmap openssl
-RUN apt-get install -y net-tools p0f sshpass
-RUN apt-get install -y telnet cron python3 python3-pip mysql-server mysql-client apache2
-RUN apt-get install -y vim
+RUN apt-get install -y build-essential apt-utils unzip curl git sudo wget inetutils-ping ssh nmap openssl vim net-tools sshpass
+RUN apt-get install -y telnet cron python3 python3-pip mysql-server mysql-client apache2 p0f
 
 RUN useradd -p $(openssl passwd -1 $user) $user --uid $user_uid --create-home
 RUN usermod -s /bin/bash -aG sudo $user

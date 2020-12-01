@@ -5,8 +5,7 @@ ARG git_repository="https://github.com/olga-zalinska/Honeypot.git"
 EXPOSE 22/tcp
 
 RUN apt-get update
-RUN apt-get install -y build-essential unzip git inetutils-ping ssh perl cpanminus ncrack
-RUN apt-get install -y vim sshpass
+RUN apt-get install -y build-essential unzip git inetutils-ping ssh perl cpanminus ncrack vim sshpass
 
 RUN cpanm DateTime::Format::Strptime
 RUN cpanm Getopt::Long
