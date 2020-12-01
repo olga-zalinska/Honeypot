@@ -1,6 +1,7 @@
 #!/bin/bash
 
 WRONG_ARGS=1
+main_dir=$(dirname "$0")
 
 show_help() {
 echo ""
@@ -23,7 +24,9 @@ echo "uwzględniając przy tym odstępy czasu między wywołaniami - jakby wcisn
 echo ""
 echo "    Jak korzystać z symulatora:"
 echo "Aby uruchomić symulator, należy najpierw stworzyć kontenery na dockerze [-c CREATE CONTAINERS] - trzeba mieć zainstalowanego dockera"
-echo "Logujemy się do Honeypota [-l LOGIN TO HONEYPOT] i wcielamy się w rolę włamywacza. Można wywoływać dowolne komendy systemowe."
+echo "Logujemy się do Honeypota [-l LOGIN TO HONEYPOT], podajemy hasło 'user' i wcielamy się w rolę włamywacza. Można wywoływać dowolne komendy systemowe."
+echo "Niektóre komendy będą zwracać dziwne komendy, ale o to właśnie chodzi. Jeśli tylko nie pojawi się wyjątek pythonowy, to znaczy że tak ma być."
+echo "Dla przykładu jakakolwiek próba użycia komendy wget zwróci '404 Not Found'."
 echo "Wychodzimy z Honeypota"
 echo "Oglądamy: wywołane komendy [-e EXECUTED COMMANDS ]"
 echo "Oglądamy zarejestrowane akcje: [ -p PLAY LOGGED ACTIONS]"
@@ -54,7 +57,7 @@ while getopts ":hepclrs" arg; do
       exit 0
       ;;
     c) # CREATE CONTAINERS
-      bash_scripts/make_containers.sh -c
+      $main_dir/bash_scripts/make_containers.sh -c
       exit 0
       ;;
     l) # LOGIN TO HONEYPOT
@@ -64,7 +67,7 @@ while getopts ":hepclrs" arg; do
       exit 0
       ;;
     r) # REMOVE CONTAINERS
-      bash_scripts/make_containers.sh -r
+      $main_dir/bash_scripts/make_containers.sh -r
       exit 0
       ;;
     s) # SSH STATISTICS

@@ -17,10 +17,6 @@ class ActionsRecorder:
         self.is_full_mode = is_full_mode
         self.dirname = dirname
         self.logs_directory = FULL_MODE_LOGS_LOCATION if self.is_full_mode else os.path.join(dirname, DEFAULT_LOGS_LOCATION)
-        # if self.is_full_mode:
-        #     self.logs_directory = FULL_MODE_LOGS_LOCATION
-        # else:
-        #     self.logs_directory = DEFAULT_LOGS_LOCATION
         self.__setLogger()
 
     def __setLogger(self):
