@@ -30,6 +30,7 @@ echo "Dla przykładu jakakolwiek próba użycia komendy wget zwróci '404 Not Fo
 echo "Wychodzimy z Honeypota"
 echo "Oglądamy: wywołane komendy [-e EXECUTED COMMANDS ]"
 echo "Oglądamy zarejestrowane akcje: [ -p PLAY LOGGED ACTIONS]"
+echo "Sprawdzamy z jakiego adresu i ile razy próbowano się zalogować: [ -s SSH STATISTICS]"
 echo "Po skończonym testowaniu symultora warto usunąć stworzone kontenery, sieci i volumeny [-r REMOVE CONTAINERS]."
 echo ""
 echo "$0 usage: [-c CREATE CONTAINERS] or [-l LOGIN TO HONEYPOT] or [-r REMOVE CONTAINERS] or [-e EXECUTED COMMANDS ] or [ -p PLAY LOGGED ACTIONS] or [-s SSH STATISTICS]"
