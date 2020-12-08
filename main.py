@@ -61,3 +61,5 @@ if __name__ == '__main__':
             sys.exit(-20)
         except KeyboardInterrupt:
             sys.exit(-10)
+        except EOFError:
+            sys.exit(-5)
