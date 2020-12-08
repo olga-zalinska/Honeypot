@@ -1,4 +1,6 @@
 from subprocess import check_output, CalledProcessError, call, DEVNULL
+from time import sleep
+
 from scripts.exceptions import CommandFailedError, ExitException
 import os
 from pathlib import Path
@@ -77,6 +79,33 @@ class ExitCommand(Command):
         raise ExitException()
 
 
+class SudoCommand(Command):
+
+    def __init__(self, sudo_state, action_recorder):
+        self.sudo_state = sudo_state
+        self.actionRecorder = action_recorder
+
+    def execute(self):
+        i = 0
+        for _ in range(3):
+            possible_password = input(f"[sudo] password for {self.sudo_state.prompt}:")
+            self.actionRecorder.log_command(command='sudo su', output=f'Provided password: {possible_password}')
+            sleep(3)
+            i += 1
+        return f"sudo: {i} incorrect password attempts"
+
+
+class SuCommand(Command):
+
+    def __init__(self, command, action_recorder):
+        self.command = command
+        self.actionRecorder = action_recorder
+
+    def execute(self):
+        possible_password = input("Password: ")
+        self.actionRecorder.log_command(command=self.command, output=f'Provided password: {possible_password}')
+        return "su: Authentication failure"
+
 class CustomCommand(Command):
     pass
 
@@ -99,12 +128,15 @@ class SystemCommandsHandler:
         if 'wget' in provided_command: return WgetCommand(provided_command, self.wget_storage_location)
         if 'cd' in provided_command: return CdCommand(provided_command)
         if 'exit' in provided_command: return ExitCommand(provided_command)
+        if 'sudo su' in provided_command: return SudoCommand(self.sudo_state, self.actionRecorder)
+        if 'su -' in provided_command: return SuCommand(provided_command, self.actionRecorder)
         return CustomCommand(provided_command)
 
-    def __init__(self, action_recorder, terminal_display, dirname):
+    def __init__(self, action_recorder, terminal_display, sudo_state, dirname):
         self.dirname = dirname
         self.actionRecorder = action_recorder
         self.terminalDisplay = terminal_display
+        self.sudo_state = sudo_state
         self.backuped_commands_dir = os.path.join(self.dirname, 'backed_up_commands')
         self.wget_storage_location = os.path.join(self.dirname, 'wget_downloads')
 
