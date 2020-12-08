@@ -1,5 +1,5 @@
 from subprocess import check_output, CalledProcessError, call, DEVNULL
-from scripts.exceptions import CommandFailedError
+from scripts.exceptions import CommandFailedError, ExitException
 import os
 from pathlib import Path
 
@@ -72,6 +72,11 @@ class UnameCommand(Command):
         return output.replace("GNU/Linux", "").replace("4.15.0-96-generic #97-Ubuntu", "").replace("Linux", "System")
 
 
+class ExitCommand(Command):
+    def execute(self):
+        raise ExitException()
+
+
 class CustomCommand(Command):
     pass
 
@@ -93,6 +98,7 @@ class SystemCommandsHandler:
         if 'uname' in provided_command: return UnameCommand(provided_command)
         if 'wget' in provided_command: return WgetCommand(provided_command, self.wget_storage_location)
         if 'cd' in provided_command: return CdCommand(provided_command)
+        if 'exit' in provided_command: return ExitCommand(provided_command)
         return CustomCommand(provided_command)
 
     def __init__(self, action_recorder, terminal_display, dirname):

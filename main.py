@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from scripts.actionsRecorder import ActionsRecorder
-from scripts.exceptions import CommandFailedError
+from scripts.exceptions import CommandFailedError, ExitException
 from scripts.systemCommandsHandler import SystemCommandsHandler
 from scripts.terminaldisplay import TerminalDisplay
 import os
@@ -37,6 +37,7 @@ def parse_arguments():
                              "- top - fałszywa informacja o braku wolnego miejsca na dysku"
                              "- bash - pusty output, żeby myślano że komendę udało się wywołać"
                              "- uname - w przypadku korzystania z dockera zostanie zwrócona komenda uname bez nazwy i wersji systemu"
+                             "- exit - wylogowanie z systemu"
                              "Inne obsługiwane komendy:"
                              "- cd - skrypt zapamiętuje każde przejście do innego katalogu i wtedy komendy wywołuje z niego"
                              ""
@@ -56,5 +57,7 @@ if __name__ == '__main__':
             systemCommandsHandler.handle_command(received_command)
         except CommandFailedError:
             continue
+        except ExitException:
+            sys.exit(-20)
         except KeyboardInterrupt:
             sys.exit(-10)
