@@ -1,9 +1,11 @@
 #!/bin/bash
 
-user_id=0
 main_dir=$(dirname "$0")
 honeypot_dir=$1
+user=$2
+user_id=0
 shared_volume=/volume
+p0f_file="p0f_scan.log"
 
 if [[ $EUID -ne $user_id ]]; then
    echo "This script must be run as root"
@@ -18,4 +20,4 @@ service mysql start &
 apachectl -D FOREGROUND &
 chmod 777 "$shared_volume"
 chmod 777 "$honeypot_dir"
-sudo --user=root p0f -i eth0 >> $shared_volume/p0f_scan.log &
+sudo --user=root p0f -i eth0 -o $shared_volume/$p0f_file -u $user -d &

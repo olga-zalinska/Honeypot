@@ -19,6 +19,6 @@ RUN usermod -s /bin/bash -aG sudo $user
 RUN python3 -m pip install --upgrade pip
 
 RUN git clone $git_repository $honeypot_dir
-RUN $honeypot_dir/bash_scripts/configure_setup.sh $honeypot_dir
+RUN $honeypot_dir/bash_scripts/configure_setup.sh $honeypot_dir $user
 
 CMD echo "Honeypot created"

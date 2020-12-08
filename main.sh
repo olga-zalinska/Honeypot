@@ -71,7 +71,7 @@ while getopts ":hepclrs" arg; do
       exit 0
       ;;
     s) # SSH STATISTICS
-      echo "Not implemented"
+      docker exec -it gateway /root/Honeypot/main.pl --ssh_statistics --full_mode
       exit 0
       ;;
     h) # HELP
@@ -109,7 +109,7 @@ check_required_packages (){
 	fi
 }
 
-parse_args $*
 check_required_packages
+parse_args $*
 
 exit 0
