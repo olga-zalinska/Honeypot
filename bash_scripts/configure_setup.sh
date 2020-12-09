@@ -16,6 +16,5 @@ echo "ForceCommand cd $honeypot_dir; ./main.py --full_mode" >> /etc/ssh/sshd_con
 sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 service ssh start
-chmod 777 "$shared_volume"
 chmod 777 "$honeypot_dir"
-sudo --user=root p0f -i eth0 -o $shared_volume/$p0f_file -u $user -d &
+p0f -i eth0 -o $shared_volume/$p0f_file -u $user -d 

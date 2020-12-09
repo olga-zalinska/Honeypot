@@ -64,7 +64,8 @@ while getopts ":hepclrs" arg; do
     l) # LOGIN TO HONEYPOT
       docker exec -it honeypot service ssh restart
       docker exec -it honeypot chmod 777 /volume
-      docker exec -it gateway ssh user@172.18.0.2
+      docker exec -it honeypot p0f -i eth0 -o /volume/p0f_scan.log -u user -d 
+      docker exec -it gateway ssh user@172.18.0.3
       exit 0
       ;;
     r) # REMOVE CONTAINERS

@@ -26,7 +26,7 @@ create_and_run_containers() {
   docker build . -t gateway_to_honeypot -f Gateway_Dockerfile && echo "Gateway already created" || echo "Created Gateway"
 
   docker run -itd --net net1 -v volume1:/volume --name gateway gateway_to_honeypot /bin/bash || true
-  docker run -itd --net net1 -v volume1:/volume --ip 172.18.0.2 --name honeypot honeypot_img /bin/bash || true
+  docker run -itd --net net1 -v volume1:/volume --ip 172.18.0.3 --name honeypot honeypot_img /bin/bash || true
 }
 
 parse_args(){
