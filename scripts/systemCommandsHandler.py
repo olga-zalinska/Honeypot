@@ -75,7 +75,13 @@ class UnameCommand(Command):
 
 
 class ExitCommand(Command):
+
+    def __init__(self, command, action_recorder):
+        self.command = command
+        self.actionRecorder = action_recorder
+
     def execute(self):
+        self.actionRecorder.log_command(command=self.command)
         raise ExitException()
 
 
@@ -106,6 +112,7 @@ class SuCommand(Command):
         self.actionRecorder.log_command(command=self.command, output=f'Provided password: {possible_password}')
         return "su: Authentication failure"
 
+
 class CustomCommand(Command):
     pass
 
@@ -127,7 +134,8 @@ class SystemCommandsHandler:
         if 'uname' in provided_command: return UnameCommand(provided_command)
         if 'wget' in provided_command: return WgetCommand(provided_command, self.wget_storage_location)
         if 'cd' in provided_command: return CdCommand(provided_command)
-        if 'exit' in provided_command: return ExitCommand(provided_command)
+        if 'exit' in provided_command: return ExitCommand(provided_command, self.actionRecorder)
+        if 'logout' in provided_command: return ExitCommand(provided_command, self.actionRecorder)
         if 'sudo su' in provided_command: return SudoCommand(self.sudo_state, self.actionRecorder)
         if 'su -' in provided_command: return SuCommand(provided_command, self.actionRecorder)
         return CustomCommand(provided_command)

@@ -18,13 +18,13 @@ my $COMMANDS_LOG = 'commands.log';
 my $COMMANDS_WITH_OUTPUTS_LOG = 'commands_with_outputs.log';
 my $OUTPUT_START = 'output_start';
 my $OUTPUT_END = 'output_end';
-my $USER = "user>"; #todo root>
+my $USER = "user>";
 my $P0F_FILE = "p0f_scan.log";
 
 sub read_events_from_commands_log {
     my $filename = $_[0];
     my %events = ();
-    open(FH, '<', $filename) or die $!;
+    open(FH, '<', $filename) or die "Nie znaleziono pliku commands.log. W pierwszej kolejności użyj main.py by wywołać i zalogować komendy.";
     while (<FH>) {
         my $log_line = $_;
         if (length($log_line) > 1) {
@@ -49,7 +49,7 @@ sub read_events_outputs{
     my %outputs = ();
     my $dates_iterator = 0;
 
-    open(FH, '<', $filename) or die $!;
+    open(FH, '<', $filename) or die "Nie znaleziono pliku commands_with_outputs.log. W pierwszej kolejności użyj main.py by wywołać i zalogować komendy.";
     my $single_output = '';
     my $is_in_output = 0;
     while (<FH>) {
@@ -80,7 +80,7 @@ sub read_ssh_statistics {
     my %intruder_ips = ();
     my %intruder_operating_system = ();
 
-    open(FH, '<', $p0f_file) or die $!;
+    open(FH, '<', $p0f_file) or die "Nie znaleziono pliku p0f_scan.log. Jest on tworzony tylko gdy ktoś zaloguje się do honeypota przez SSH.";
     while (<FH>) {
         my $log_line = $_;
         if (length($log_line) > 1) {
@@ -169,15 +169,15 @@ else{
 
 my %events = read_events_from_commands_log($dir_with_logs . $COMMANDS_LOG);
 
-if($executed_commands == 1){
-    print_commands(%events);
-}
-elsif($play_logged_actions == 1){
+if($play_logged_actions == 1){
     my @execution_dates = (sort keys %events);
     my %outputs = read_events_outputs($dir_with_logs . $COMMANDS_WITH_OUTPUTS_LOG, \@execution_dates);
     print_commands_imitating_time(\%events, \%outputs);
 }
-elsif($ssh_statistics == 1){
+elsif($executed_commands == 1){
+    print_commands(%events);
+}
+if($ssh_statistics == 1){
     read_ssh_statistics($dir_with_logs . $P0F_FILE);
 }
 

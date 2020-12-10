@@ -1,0 +1,10 @@
+[2020/12/08 18:31:09] mod=syn|cli=172.18.0.10/48834|srv=172.18.0.2/22|subj=cli|os=Linux 2.2.x-3.x|dist=0|params=generic|raw_sig=4:64+0:0:1460:mss*44,7:mss,sok,ts,nop,ws:df,id+:0
+[2020/12/08 18:31:09] mod=mtu|cli=172.18.0.1/48834|srv=172.18.0.2/22|subj=cli|link=Ethernet or modem|raw_mtu=1500
+[2020/12/08 18:31:09] mod=syn+ack|cli=172.18.0.1/48834|srv=172.18.0.2/22|subj=srv|os=???|dist=0|params=none|raw_sig=4:64+0:0:1460:mss*45,7:mss,sok,ts,nop,ws:df:0
+[2020/12/08 18:31:09] mod=mtu|cli=172.18.0.1/48834|srv=172.18.0.2/22|subj=srv|link=Ethernet or modem|raw_mtu=1500
+[2020/12/08 18:31:27] mod=syn|cli=172.18.0.1/48836|srv=172.18.0.2/22|subj=cli|os=Linux 2.2.x-3.x|dist=0|params=generic|raw_sig=4:64+0:0:1460:mss*44,7:mss,sok,ts,nop,ws:df,id+:0
+[2020/12/08 18:31:27] mod=mtu|cli=172.18.0.1/48836|srv=172.18.0.2/22|subj=cli|link=Ethernet or modem|raw_mtu=1500
+[2020/12/08 18:31:27] mod=uptime|cli=172.18.0.1/48836|srv=172.18.0.2/22|subj=cli|uptime=13 days 0 hrs 37 min (modulo 49 days)|raw_freq=1000.06 Hz
+[2020/12/08 18:31:27] mod=syn+ack|cli=172.18.0.1/48836|srv=172.18.0.2/22|subj=srv|os=???|dist=0|params=none|raw_sig=4:64+0:0:1460:mss*45,7:mss,sok,ts,nop,ws:df:0
+[2020/12/08 18:31:27] mod=mtu|cli=172.18.0.1/48836|srv=172.18.0.2/22|subj=srv|link=Ethernet or modem|raw_mtu=1500
+[2020/12/08 18:31:27] mod=uptime|cli=172.18.0.1/48836|srv=172.18.0.2/22|subj=srv|uptime=4 days 10 hrs 44 min (modulo 49 days)|raw_freq=1000.06 Hz
