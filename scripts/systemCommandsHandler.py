@@ -155,5 +155,5 @@ class SystemCommandsHandler:
             self.terminalDisplay.show_output(out)
             self.actionRecorder.log_command(command=command, output=out)
         except CalledProcessError as e:
-            self.actionRecorder.log_command(output='command failed')
+            self.actionRecorder.log_command(command=command, output='command failed')
             raise CommandFailedError()
