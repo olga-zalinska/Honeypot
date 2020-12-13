@@ -79,4 +79,5 @@ if __name__ == '__main__':
             print("")
             sys.exit(2)
         except EOFError:
+            actionRecorder.log_command(command="SessionEnded", output="********************* Session ended *********************\n")
             sys.exit(3)
