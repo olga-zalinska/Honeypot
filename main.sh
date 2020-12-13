@@ -40,60 +40,50 @@ grep " .)\ #" $0
 
 
 usage() {
-show_help
-exit $WRONG_ARGS
+	show_help
+	exit $WRONG_ARGS
 }
 
 parse_args(){
-[ $# -eq 0 ] && usage
-
-while getopts ":hepclrs" arg; do
-  case ${arg} in
-    e) # EXECUTED COMMANDS
-      docker exec -it gateway /root/Honeypot/main.pl --executed_commands --full_mode
-      exit 0
-      ;;
-    p) # PLAY LOGGED ACTIONS
-      docker exec -it gateway /root/Honeypot/main.pl --play_logged_actions --full_mode
-      exit 0
-      ;;
-    c) # CREATE CONTAINERS
-      $main_dir/bash_scripts/make_containers.sh -c
-      exit 0
-      ;;
-    l) # LOGIN TO HONEYPOT
-      docker exec -it honeypot service ssh restart
-      docker exec -it honeypot chmod 777 /volume
-      docker exec -it honeypot p0f -i eth0 -o /volume/p0f_scan.log -u user -d 
-      docker exec -it gateway ssh user@172.18.0.3
-      exit 0
-      ;;
-    r) # REMOVE CONTAINERS
-      $main_dir/bash_scripts/make_containers.sh -r
-      exit 0
-      ;;
-    s) # SSH STATISTICS
-      docker exec -it gateway /root/Honeypot/main.pl --ssh_statistics --full_mode
-      exit 0
-      ;;
-    h) # HELP
-      show_help
-      exit 0
-      ;;
-    help) # HELP
-      show_help
-      exit 0
-      ;;
-    *)
-    usage
-    exit 1
-    ;;
-  esac
-done
+	while getopts ":hepclrs" arg; do
+	  case ${arg} in
+	    e) # EXECUTED COMMANDS
+	      docker exec -it gateway /root/Honeypot/main.pl --executed_commands --full_mode
+	      exit 0
+	      ;;
+	    p) # PLAY LOGGED ACTIONS
+	      docker exec -it gateway /root/Honeypot/main.pl --play_logged_actions --full_mode
+	      exit 0
+	      ;;
+	    c) # CREATE CONTAINERS
+	      $main_dir/bash_scripts/make_containers.sh -c
+	      exit 0
+	      ;;
+	    l) # LOGIN TO HONEYPOT
+	      docker exec -it honeypot service ssh restart
+	      docker exec -it honeypot chmod 777 /volume
+	      docker exec -it honeypot p0f -i eth0 -o /volume/p0f_scan.log -u user -d 
+	      docker exec -it gateway ssh user@172.18.0.3
+	      exit 0
+	      ;;
+	    r) # REMOVE CONTAINERS
+	      $main_dir/bash_scripts/make_containers.sh -r
+	      exit 0
+	      ;;
+	    s) # SSH STATISTICS
+	      docker exec -it gateway /root/Honeypot/main.pl --ssh_statistics --full_mode
+	      exit 0
+	      ;;
+	    *)
+	    usage
+	    exit 1
+	    ;;
+	  esac
+	done
 }
 
 check_required_packages (){
-	required_packages=(git docker )
+	required_packages=(git docker)
 	i=0
 	for package in "${required_packages[@]}"
 	do
@@ -111,6 +101,16 @@ check_required_packages (){
 	fi
 }
 
+check_if_help (){
+	[ $# -eq 0 ] && usage
+	if [[ "$1" == *"-h"* || "$1" == *"--help"* ]]
+	then
+		show_help
+		exit 10
+	fi
+}
+
+check_if_help $1
 check_required_packages
 parse_args $*
 
