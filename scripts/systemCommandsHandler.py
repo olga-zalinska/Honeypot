@@ -81,7 +81,7 @@ class ExitCommand(Command):
         self.actionRecorder = action_recorder
 
     def execute(self):
-        self.actionRecorder.log_command(command=self.command)
+        self.actionRecorder.log_command(command=self.command, output="********************* Session ended *********************\n")
         raise ExitException()
 
 
